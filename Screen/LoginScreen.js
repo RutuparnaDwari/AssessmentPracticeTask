@@ -1,42 +1,41 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, TextInput, Pressable, Alert } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
+
+    const handleLogin = async () => {
+        if (name && email) {
+            await AsyncStorage.setItem("user", JSON.stringify({ name, email }));
+            navigation.navigate("Scan");
+
+        }
+    }
 
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Login</Text>
             <TextInput
-                placeholder="Email"
+                placeholder="Enter Name"
+                value={name}
+                onChangeText={setName}
+                style={styles.input}
+            />
+            <TextInput
+                placeholder="Enter Email"
                 value={email}
                 onChangeText={setEmail}
                 style={styles.input}
             />
-            <TextInput
-                placeholder="Password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-                style={styles.input}
-            />
             <Pressable
                 style={styles.button}
-                onPress={() => {
-                    Alert.alert("Entered Values", `Email: ${email}\nPassword: ${password}`);
-                    navigation.navigate("Posts");
-                }}>
+                onPress={handleLogin}
+            >
                 <Text style={styles.buttonText}>Login</Text>
             </Pressable>
-             <View style={{ marginTop: 20 }}>
-                <Pressable style={styles.counterButton} onPress={()=>navigation.navigate('Counter')}>
-                    <Text style={styles.counterButtonText}>Go to Counter</Text>
-
-                </Pressable>
-             </View>
-
         </View>
     )
 }
@@ -44,8 +43,17 @@ export default function LoginScreen({ navigation }) {
 
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16, alignItems: "center", justifyContent: 'center' },
-    header: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+    container: { 
+        flex: 1, 
+        padding: 16, 
+        alignItems: "center", 
+        justifyContent: 'center' 
+    },
+    header: { 
+        fontSize: 24, 
+        fontWeight: "bold", 
+        marginBottom: 20 
+    },
     input: {
         borderWidth: 1,
         borderColor: "#ccc",
@@ -70,19 +78,19 @@ const styles = StyleSheet.create({
         width: "80%",
     },
     counterButton: {
-  borderWidth: 2,
-  borderColor: "#007BFF",
-  paddingVertical: 12,
-  paddingHorizontal: 40,
-  borderRadius: 8,
-  alignItems: "center",
-  width: "80%",
-  marginTop: 10,
-},
-counterButtonText: {
-  color: "#007BFF",
-  fontSize: 16,
-  fontWeight: "bold",
-  textAlign: "center",
-},
+        borderWidth: 2,
+        borderColor: "#007BFF",
+        paddingVertical: 12,
+        paddingHorizontal: 40,
+        borderRadius: 8,
+        alignItems: "center",
+        width: "80%",
+        marginTop: 10,
+    },
+    counterButtonText: {
+        color: "#007BFF",
+        fontSize: 16,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
 });
